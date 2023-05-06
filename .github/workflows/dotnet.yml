@@ -1,0 +1,70 @@
+name: build
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v3
+    - name: View context attributes
+      uses: actions/github-script@v6
+      with:
+        script: console.log(context)
+    - name: Calculate application version
+      id: build-version
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const toStrip = "refs/tags/v";
+          return context.ref.substring(toStrip.length)
+        result-encoding: string
+    - name: Print version
+      run: echo "${{ steps.build-version.outputs.result }}"
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Check format
+      run: dotnet format --no-restore --verify-no-changes
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+  publish:
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v3
+    - name: Get version
+      id: build-version
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const versionPrefix = "refs/tags/v";
+          return context.ref.substring(versionPrefix.length)
+        result-encoding: string
+    - name: Print version
+      run: echo "${{ steps.build-version.outputs.result }}"
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build -c RELEASE -p:ContinuousIntegrationBuild=true -p:version=${{ steps.build-version.outputs.result }} --no-restore
+    - name: Create nuget package
+      run: dotnet pack -c RELEASE --no-build -p:packageVersion=${{ steps.build-version.outputs.result }} -p:RepositoryBranch=${GITHUB_REF#refs/*/} --no-restore
+    - name: Publish package to nuget
+      run: dotnet nuget push "${GITHUB_WORKSPACE}/ServiceBusOps.Cli/nupkg/az-ops-sb.${{ steps.build-version.outputs.result }}.nupkg" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+  

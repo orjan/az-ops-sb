@@ -1,0 +1,8 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+src/AzOps.Sb/nupkg/
+AzOps.Sb.sln.DotSettings.user

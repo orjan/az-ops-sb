@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>az-ops-sb</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        <PackageId>az-ops-sb</PackageId>
+        <Title>Operations of Azure Service Bus</Title>
+        <Authors>orjansjoholm</Authors>
+        <Description>Azure Service Bus management cli
+- Listing dead letters for subcriptions
+- Requeuing dead letters
+</Description>
+        <Copyright>Örjan Sjöholm</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>ServiceBus</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Azure.Identity" Version="1.8.2" />
+      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.13.1" />
+      <PackageReference Include="Azure.ResourceManager" Version="1.4.0" />
+      <PackageReference Include="Azure.ResourceManager.ServiceBus" Version="1.0.0" />
+      <PackageReference Include="DotNetConfig" Version="1.0.6" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+      <PackageReference Include="Spectre.Console" Version="0.46.0" />
+      <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
+      <PackageReference Include="Spectre.Console.Json" Version="0.46.0" />
+    </ItemGroup>
+
+</Project>

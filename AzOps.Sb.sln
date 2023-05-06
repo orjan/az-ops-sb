@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzOps.Sb", "src\AzOps.Sb\AzOps.Sb.csproj", "{141538C9-DC27-468B-9207-F8DDB9AA9508}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D9C74BFE-F2BF-4A56-9683-F1706CB12AD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2736D928-8FA4-4DDA-B3F6-F29FB2998279}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzOps.Sb.Test", "test\AzOps.Sb.Test\AzOps.Sb.Test.csproj", "{3772B911-8C66-400D-9951-BD18EDA6935E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{141538C9-DC27-468B-9207-F8DDB9AA9508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141538C9-DC27-468B-9207-F8DDB9AA9508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141538C9-DC27-468B-9207-F8DDB9AA9508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141538C9-DC27-468B-9207-F8DDB9AA9508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3772B911-8C66-400D-9951-BD18EDA6935E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3772B911-8C66-400D-9951-BD18EDA6935E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3772B911-8C66-400D-9951-BD18EDA6935E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3772B911-8C66-400D-9951-BD18EDA6935E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{141538C9-DC27-468B-9207-F8DDB9AA9508} = {D9C74BFE-F2BF-4A56-9683-F1706CB12AD0}
+		{3772B911-8C66-400D-9951-BD18EDA6935E} = {2736D928-8FA4-4DDA-B3F6-F29FB2998279}
+	EndGlobalSection
+EndGlobal
