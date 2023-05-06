@@ -18,8 +18,10 @@
         <Copyright>Örjan Sjöholm</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageTags>ServiceBus</PackageTags>
-        <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/orjan/az-ops-sb</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/orjan/az-ops-sb.git</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
