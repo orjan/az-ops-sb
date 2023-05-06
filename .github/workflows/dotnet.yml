@@ -64,7 +64,6 @@ jobs:
     - name: Build
       run: dotnet build -c RELEASE -p:ContinuousIntegrationBuild=true -p:version=${{ steps.build-version.outputs.result }} --no-restore
     - name: Create nuget package
-      run: dotnet pack -c RELEASE --no-build -p:packageVersion=${{ steps.build-version.outputs.result }} -p:RepositoryBranch=${GITHUB_REF#refs/*/} --no-restore
+      run: dotnet pack -c RELEASE --no-build -p:packageVersion=${{ steps.build-version.outputs.result }} -p:RepositoryBranch=${GITHUB_REF#refs/*/} -p:RepositoryCommit=${GITHUB_SHA} --no-restore
     - name: Publish package to nuget
       run: dotnet nuget push "${GITHUB_WORKSPACE}/ServiceBusOps.Cli/nupkg/az-ops-sb.${{ steps.build-version.outputs.result }}.nupkg" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-  
