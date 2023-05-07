@@ -1,4 +1,8 @@
 # az-ops-sb
+[![build](https://github.com/orjan/az-ops-sb/workflows/build/badge.svg)](https://github.com/orjan/az-ops-sb/actions?query=workflow:"build")
+[![GitHub release](https://img.shields.io/github/release/orjan/az-ops-sb?include_prereleases=&sort=semver&color=blue)](https://github.com/orjan/az-ops-sb/releases/)
+[![License](https://img.shields.io/badge/License-MIT-blue)](#license)
+
 
 ## Getting started
 
