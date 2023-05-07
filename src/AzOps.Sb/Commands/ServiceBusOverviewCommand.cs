@@ -17,17 +17,17 @@ public class ServiceBusOverviewCommand : AsyncCommand<ServiceBusOverviewCommand.
     {
         [RequiredArgument]
         [Description("Azure Subscription Id")]
-        [CommandOption("-s|--subscription-id")]
+        [CommandOption("-s|--subscription-id <SUBSCRIPTIONID>")]
         public string? SubscriptionId { get; set; }
 
         [RequiredArgument]
         [Description("ServiceBus resource group")]
-        [CommandOption("-r|--resource-group")]
+        [CommandOption("-r|--resource-group <RESOURCEGROUP>")]
         public string? ResourceGroup { get; set; }
 
         [RequiredArgument]
         [Description("ServiceBus namespace")]
-        [CommandOption("-n|--namespace")]
+        [CommandOption("-n|--namespace <NAMESPACE>")]
         public string? Namespace { get; init; }
 
         [Description("Show all topics and subscriptions even if there's no dead letters")]
