@@ -1,6 +1,7 @@
 # az-ops-sb
-[![build](https://github.com/orjan/az-ops-sb/workflows/build/badge.svg)](https://github.com/orjan/az-ops-sb/actions?query=workflow:"build")
-[![GitHub release](https://img.shields.io/github/release/orjan/az-ops-sb?include_prereleases=&sort=semver&color=blue)](https://github.com/orjan/az-ops-sb/releases/)
+[![Build](https://github.com/orjan/az-ops-sb/workflows/build/badge.svg)](https://github.com/orjan/az-ops-sb/actions?query=workflow:"build")
+[![GitHub Release](https://img.shields.io/github/release/orjan/az-ops-sb?include_prereleases=&sort=semver&color=blue)](https://github.com/orjan/az-ops-sb/releases/)
+[![NuGet version](https://img.shields.io/nuget/v/az-ops-sb.svg?style=flat&label=NuGet)](https://www.nuget.org/packages/az-ops-sb)
 [![License](https://img.shields.io/badge/License-MIT-blue)](#license)
 
 
