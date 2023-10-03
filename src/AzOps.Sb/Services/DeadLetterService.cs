@@ -41,6 +41,56 @@ public class DeadLetterService
         }
     }
 
+    public async IAsyncEnumerable<ServiceBusReceivedMessage> DeleteDeadLetters(DeadLetterQuery query)
+    {
+        var fullyQualifiedNamespace = query.Id.Namespace + FullyQualifiedExtension;
+        await using var serviceBusClient = new ServiceBusClient(fullyQualifiedNamespace, _tokenCredential);
+
+
+        var serviceBusReceiver = serviceBusClient.CreateReceiver(query.Id.Topic, query.Id.Subscription,
+            new ServiceBusReceiverOptions
+            {
+                ReceiveMode = ServiceBusReceiveMode.PeekLock,
+                SubQueue = SubQueue.DeadLetter
+            });
+
+        var shouldStopExecution = false;
+
+        for (; ; )
+        {
+            if (shouldStopExecution)
+            {
+                yield break;
+            }
+
+            var messages = await serviceBusReceiver.ReceiveMessagesAsync(10, TimeSpan.FromSeconds(5));
+
+            if (messages.Count == 0)
+            {
+                yield break;
+            }
+
+            foreach (var message in messages)
+            {
+                if (!shouldStopExecution)
+                {
+                    shouldStopExecution = !IsMessageValid(message, query.Filters);
+                }
+
+                if (shouldStopExecution)
+                {
+                    await serviceBusReceiver.AbandonMessageAsync(message);
+                }
+                else
+                {
+                    await serviceBusReceiver.CompleteMessageAsync(message);
+                    yield return message;
+                }
+
+            }
+        }
+    }
+
     private bool IsMessageValid(ServiceBusReceivedMessage message, IReadOnlyCollection<IFilterMessage> filters)
     {
         return filters.All(filterMessage => filterMessage.IsValid(message));
@@ -59,7 +109,8 @@ public class DeadLetterService
             });
 
         await using var sender =
-            serviceBusClient.CreateSender(command.Id.Topic, new ServiceBusSenderOptions { Identifier = ApplicationIdentifier });
+            serviceBusClient.CreateSender(command.Id.Topic,
+                new ServiceBusSenderOptions { Identifier = ApplicationIdentifier });
 
         var deadLetter = await deadLetterReceiver.ReceiveMessageAsync();
         try
