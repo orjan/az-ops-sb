@@ -29,15 +29,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Identity" Version="1.8.2" />
-      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.13.1" />
-      <PackageReference Include="Azure.ResourceManager" Version="1.5.0" />
+      <PackageReference Include="Azure.Identity" Version="1.10.1" />
+      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.1" />
+      <PackageReference Include="Azure.ResourceManager" Version="1.7.0" />
       <PackageReference Include="Azure.ResourceManager.ServiceBus" Version="1.0.0" />
       <PackageReference Include="DotNetConfig" Version="1.0.6" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-      <PackageReference Include="Spectre.Console" Version="0.46.0" />
-      <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
-      <PackageReference Include="Spectre.Console.Json" Version="0.46.0" />
+      <PackageReference Include="Spectre.Console" Version="0.47.0" />
+      <PackageReference Include="Spectre.Console.Cli" Version="0.47.0" />
+      <PackageReference Include="Spectre.Console.Json" Version="0.47.0" />
     </ItemGroup>
 
 </Project>
