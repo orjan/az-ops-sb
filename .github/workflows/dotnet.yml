@@ -13,12 +13,12 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
     - name: View context attributes
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: console.log(context)
     - name: Calculate application version
       id: build-version
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           const toStrip = "refs/tags/v";
@@ -48,7 +48,7 @@ jobs:
       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
     - name: Get version
       id: build-version
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           const versionPrefix = "refs/tags/v";
