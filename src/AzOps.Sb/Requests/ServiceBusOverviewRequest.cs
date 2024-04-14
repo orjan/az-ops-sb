@@ -1,24 +1,30 @@
 using Azure.ResourceManager;
 using Azure.ResourceManager.ServiceBus;
+using MediatR;
 
-namespace AzOps.Sb.Services;
+namespace AzOps.Sb.Requests;
 
-public class ServiceBusResourceService
+public record ServiceBusOverviewRequest(ServiceBusIdentifier Identifier)
+    : IRequest<IReadOnlyCollection<TopicStatistics>>;
+
+public class
+    ServiceBusOverviewRequestHandler : IRequestHandler<ServiceBusOverviewRequest, IReadOnlyCollection<TopicStatistics>>
 {
     private readonly ArmClientFactory _armClientFactory;
 
-    public ServiceBusResourceService(ArmClientFactory armClientFactory)
+    public ServiceBusOverviewRequestHandler(ArmClientFactory armClientFactory)
     {
-        _armClientFactory = armClientFactory;
+        _armClientFactory = armClientFactory ?? throw new ArgumentNullException(nameof(armClientFactory));
     }
 
-    public async Task<IReadOnlyCollection<TopicStatistics>> ExecuteQueryAsync(ServiceBusIdentifier query)
+    public async Task<IReadOnlyCollection<TopicStatistics>> Handle(ServiceBusOverviewRequest request,
+        CancellationToken cancellationToken)
     {
-        var client = _armClientFactory(query.SubscriptionId);
-        var defaultSubscription = await client.GetDefaultSubscriptionAsync();
+        var client = _armClientFactory(request.Identifier.SubscriptionId);
+        var defaultSubscription = await client.GetDefaultSubscriptionAsync(cancellationToken);
         var serviceBusId = ServiceBusNamespaceResource.CreateResourceIdentifier(defaultSubscription.Id.SubscriptionId,
-            query.ResourceGroup,
-            query.Namespace);
+            request.Identifier.ResourceGroup,
+            request.Identifier.Namespace);
         var serviceBus = client.GetServiceBusNamespaceResource(serviceBusId);
         var topics = serviceBus.GetServiceBusTopics();
         var topicStatistics = topics.Select(resource =>

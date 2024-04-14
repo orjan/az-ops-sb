@@ -1,4 +1,5 @@
 ﻿using AzOps.Sb.Commands;
+using AzOps.Sb.Requests;
 using AzOps.Sb.Services;
 using Azure.Core;
 using Azure.Identity;
@@ -23,7 +24,11 @@ public class Program
         registrations.AddSingleton<ArmClient>(provider => new ArmClient(provider.GetRequiredService<TokenCredential>(), "35832890-9745-460a-bd12-387aab279d05"));
         registrations.AddSingleton<ArmClientFactory>(provider => (string subscriptionId) => new ArmClient(provider.GetRequiredService<TokenCredential>(), subscriptionId));
         registrations.AddSingleton<DeadLetterService>();
-        registrations.AddSingleton<ServiceBusResourceService>();
+
+        registrations.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(ServiceBusOverviewRequest).Assembly);
+        });
         var registrar = new Infrastructure.TypeRegistrar(registrations);
 
         // Create a new command app with the registrar
