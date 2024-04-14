@@ -8,7 +8,7 @@ using Spectre.Console.Cli;
 
 namespace AzOps.Sb.Commands;
 
-public class ServiceBusOverviewCommand : SbAsyncCommand<ServiceBusOverviewCommand.Settings>
+public class ServiceBusOverviewCommand : CancellableAsyncCommand<ServiceBusOverviewCommand.Settings>
 {
     private readonly IAnsiConsole _console;
     private readonly IMediator _mediator;
@@ -76,14 +76,14 @@ public class ServiceBusOverviewCommand : SbAsyncCommand<ServiceBusOverviewComman
 
     public record ValidatedSetting(string SubscriptionId, string ResourceGroup, string Namespace, bool ShowAll);
 
-    public ServiceBusOverviewCommand(IAnsiConsole console, IMediator mediator, Config config)
+    public ServiceBusOverviewCommand(IAnsiConsole console, IMediator mediator, Config config) : base(console)
     {
         _console = console ?? throw new ArgumentNullException(nameof(console));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var validatedSettings = settings.ToValidateCommand();
 
@@ -92,7 +92,7 @@ public class ServiceBusOverviewCommand : SbAsyncCommand<ServiceBusOverviewComman
             validatedSettings.ResourceGroup,
             validatedSettings.Namespace);
 
-        var topics = await _mediator.Send(new ServiceBusOverviewRequest(identifier));
+        var topics = await _mediator.Send(new ServiceBusOverviewRequest(identifier), cancellationToken);
 
         Render(_console, validatedSettings, topics);
 
