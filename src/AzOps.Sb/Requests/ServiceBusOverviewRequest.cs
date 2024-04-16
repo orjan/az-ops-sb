@@ -1,4 +1,3 @@
-using Azure.ResourceManager;
 using Azure.ResourceManager.ServiceBus;
 using MediatR;
 
@@ -39,8 +38,6 @@ public class
         return topicStatistics;
     }
 }
-
-public delegate ArmClient ArmClientFactory(string azureSubscriptionId);
 
 public record TopicStatistics(string Topic, IReadOnlyCollection<SubscriptionStatistics> SubscriptionStatistics);
 

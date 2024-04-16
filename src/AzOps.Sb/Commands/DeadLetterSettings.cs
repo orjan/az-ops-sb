@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using AzOps.Sb.Services;
+using AzOps.Sb.Requests;
 using Spectre.Console;
 using Spectre.Console.Cli;
 

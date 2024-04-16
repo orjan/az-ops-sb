@@ -1,5 +1,7 @@
-using AzOps.Sb.Services;
-using AzOps.Sb.Services.Filters;
+using AzOps.Sb.Requests;
+using AzOps.Sb.Requests.Filters;
+using Azure.Messaging.ServiceBus;
+using MediatR;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -8,20 +10,28 @@ namespace AzOps.Sb.Commands;
 public class DeadLetterListCommand : AsyncCommand<DeadLetterSettings>
 {
     private readonly IAnsiConsole _ansiConsole;
-    private readonly DeadLetterService _deadLetterService;
+    private readonly IMediator _mediator;
 
-    public DeadLetterListCommand(IAnsiConsole ansiConsole, DeadLetterService deadLetterService)
+    public DeadLetterListCommand(IAnsiConsole ansiConsole, IMediator mediator)
     {
         _ansiConsole = ansiConsole;
-        _deadLetterService = deadLetterService;
+        _mediator = mediator;
     }
     public override async Task<int> ExecuteAsync(CommandContext context, DeadLetterSettings settings)
     {
-        IReadOnlyCollection<IFilterMessage> filters = new[] { new LimitFilter(settings.Limit) };
-        var query = new DeadLetterQuery(settings.MapDeadLetterId(), filters);
-        var deadLetters = _deadLetterService.DeadLetterQuery(query);
+        var messageFilter = MessageFilter.Builder
+            .Create(settings.Limit)
+            .Build();
 
-        await foreach (var message in deadLetters.ConfigureAwait(false))
+        var deadLetters = _mediator.CreateStream(new DeadLetterListRequest(settings.MapDeadLetterId(), messageFilter));
+
+        await Render(_ansiConsole, deadLetters);
+
+        return 0;
+    }
+    private async static Task Render(IAnsiConsole console, IAsyncEnumerable<ServiceBusReceivedMessage> deadLetters)
+    {
+        await foreach (var message in deadLetters)
         {
             var root = new Tree(new Markup("[blue]Dead Letter Properties[/]"))
             {
@@ -37,12 +47,10 @@ public class DeadLetterListCommand : AsyncCommand<DeadLetterSettings>
             {
                 applicationPropertiesNode.AddNode(property.Key).AddNode(property.Value?.ToString() ?? "-");
             }
-            _ansiConsole.Write(root);
-            _ansiConsole.MarkupLine("[blue]Message Body[/]");
-            _ansiConsole.Write(new Spectre.Console.Json.JsonText(message.Body.ToString()));
-            _ansiConsole.WriteLine();
+            console.Write(root);
+            console.MarkupLine("[blue]Message Body[/]");
+            console.Write(new Spectre.Console.Json.JsonText(message.Body.ToString()));
+            console.WriteLine();
         }
-
-        return 0;
     }
 }
