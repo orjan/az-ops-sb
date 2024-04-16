@@ -33,7 +33,7 @@ public class
                 SubQueue = SubQueue.DeadLetter
             });
 
-        while (true)
+        while (filter.ShouldFetchMessages())
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -47,6 +47,12 @@ public class
             var messages = await serviceBusReceiver.PeekMessagesAsync(
                 maxMessages,
                 cancellationToken: cancellationToken);
+
+            if (messages.Count == 0)
+            {
+                yield break;
+            }
+
             foreach (var message in messages)
             {
                 if (filter.IsValidMessage(message))

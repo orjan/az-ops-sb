@@ -45,7 +45,7 @@ public class ServiceBusMessageFilter
 
     public bool IsValidMessage(ServiceBusReceivedMessage message)
     {
-        if (_processedMessages >= MaxMessages)
+        if (HasReachedMaxLimitOfMessages())
         {
             return false;
         }
@@ -60,5 +60,14 @@ public class ServiceBusMessageFilter
         var remainingMessages = MaxMessages - _processedMessages;
 
         return int.Min(remainingMessages, maxBatchSize);
+    }
+    public bool ShouldFetchMessages()
+    {
+        return !HasReachedMaxLimitOfMessages();
+    }
+
+    private bool HasReachedMaxLimitOfMessages()
+    {
+        return _processedMessages >= MaxMessages;
     }
 }
