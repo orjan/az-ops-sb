@@ -59,6 +59,7 @@ It's possible to omit `--subscription-id` and `--resource-group` by adding them 
             {
                 add.AddCommand<DeadLetterListCommand>("list");
                 add.AddCommand<DeadLetterRequeueCommand>("requeue");
+                add.AddCommand<DeadLetterDeleteCommand>("delete");
             });
 #if DEBUG
             appConfig.PropagateExceptions();

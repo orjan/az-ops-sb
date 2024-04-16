@@ -5,7 +5,7 @@ using Spectre.Console.Cli;
 
 namespace AzOps.Sb.Commands;
 
-public sealed class DeadLetterSettings : CommandSettings
+public class DeadLetterSettings : CommandSettings
 {
     [Description("ServiceBus namespace")]
     [CommandOption("-n|--namespace")]
