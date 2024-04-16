@@ -1,16 +1,17 @@
 using System.ComponentModel;
 using AzOps.Sb.Commands.Validation;
-using AzOps.Sb.Services;
+using AzOps.Sb.Requests;
 using DotNetConfig;
+using MediatR;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace AzOps.Sb.Commands;
 
-public class ServiceBusOverviewCommand : AsyncCommand<ServiceBusOverviewCommand.Settings>
+public class ServiceBusOverviewCommand : CancellableAsyncCommand<ServiceBusOverviewCommand.Settings>
 {
     private readonly IAnsiConsole _console;
-    private readonly ServiceBusResourceService _queryHandler;
+    private readonly IMediator _mediator;
     private readonly Config _config;
 
     public sealed class Settings : CommandSettings
@@ -41,7 +42,7 @@ public class ServiceBusOverviewCommand : AsyncCommand<ServiceBusOverviewCommand.
             ArgumentException.ThrowIfNullOrEmpty(ResourceGroup);
             ArgumentException.ThrowIfNullOrEmpty(Namespace);
             return new(
-                SubscriptionId, ResourceGroup, Namespace);
+                SubscriptionId, ResourceGroup, Namespace, ShowAll);
         }
     }
 
@@ -73,26 +74,35 @@ public class ServiceBusOverviewCommand : AsyncCommand<ServiceBusOverviewCommand.
         return ValidationResult.Success();
     }
 
-    public record ValidatedSetting(string SubscriptionId, string ResourceGroup, string Namespace);
+    public record ValidatedSetting(string SubscriptionId, string ResourceGroup, string Namespace, bool ShowAll);
 
-    public ServiceBusOverviewCommand(IAnsiConsole console, ServiceBusResourceService queryHandler, Config config)
+    public ServiceBusOverviewCommand(IAnsiConsole console, IMediator mediator, Config config) : base(console)
     {
         _console = console ?? throw new ArgumentNullException(nameof(console));
-        _queryHandler = queryHandler ?? throw new ArgumentNullException(nameof(queryHandler));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _config = config ?? throw new ArgumentNullException(nameof(config));
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var validatedSettings = settings.ToValidateCommand();
 
-        var query = new ServiceBusIdentifier(
+        var identifier = new ServiceBusIdentifier(
             validatedSettings.SubscriptionId,
             validatedSettings.ResourceGroup,
             validatedSettings.Namespace);
-        var topics = await _queryHandler.ExecuteQueryAsync(query);
 
-        var root = new Tree(validatedSettings.Namespace)
+        var topics = await _mediator.Send(new ServiceBusOverviewRequest(identifier), cancellationToken);
+
+        Render(_console, validatedSettings, topics);
+
+        return 0;
+    }
+
+    public static void Render(IAnsiConsole console, ValidatedSetting settings,
+        IReadOnlyCollection<TopicStatistics> topics)
+    {
+        var root = new Tree(settings.Namespace)
             .Guide(TreeGuide.Line);
 
         foreach (var topic in topics)
@@ -125,16 +135,15 @@ public class ServiceBusOverviewCommand : AsyncCommand<ServiceBusOverviewCommand.
             }
         }
 
-        _console.Write(root);
-        return 0;
+        console.Write(root);
     }
 
-    private bool HideSubscription(SubscriptionStatistics subscription)
+    private static bool HideSubscription(SubscriptionStatistics subscription)
     {
         return subscription.DeadLetterMessageCount == 0;
     }
 
-    private bool HideTopic(TopicStatistics topic)
+    private static bool HideTopic(TopicStatistics topic)
     {
         return topic.SubscriptionStatistics.Sum(statistics => statistics.DeadLetterMessageCount) == 0;
     }

@@ -1,6 +1,6 @@
 using Azure.Messaging.ServiceBus;
 
-namespace AzOps.Sb.Services.Filters;
+namespace AzOps.Sb.Requests.Filters;
 
 public class HeaderFilter : IFilterMessage
 {

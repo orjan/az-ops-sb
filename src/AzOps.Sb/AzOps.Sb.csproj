@@ -34,6 +34,7 @@
       <PackageReference Include="Azure.ResourceManager" />
       <PackageReference Include="Azure.ResourceManager.ServiceBus" />
       <PackageReference Include="DotNetConfig" />
+      <PackageReference Include="MediatR" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Spectre.Console" />
       <PackageReference Include="Spectre.Console.Cli" />

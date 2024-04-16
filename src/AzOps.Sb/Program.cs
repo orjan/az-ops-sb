@@ -1,8 +1,8 @@
 ﻿using AzOps.Sb.Commands;
-using AzOps.Sb.Services;
+using AzOps.Sb.Infrastructure;
+using AzOps.Sb.Requests;
 using Azure.Core;
 using Azure.Identity;
-using Azure.ResourceManager;
 using DotNetConfig;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
@@ -20,20 +20,23 @@ public class Program
         var registrations = new ServiceCollection();
         registrations.AddSingleton(config);
         registrations.AddSingleton<TokenCredential>(new AzureCliCredential());
-        registrations.AddSingleton<ArmClient>(provider => new ArmClient(provider.GetRequiredService<TokenCredential>(), "35832890-9745-460a-bd12-387aab279d05"));
-        registrations.AddSingleton<ArmClientFactory>(provider => (string subscriptionId) => new ArmClient(provider.GetRequiredService<TokenCredential>(), subscriptionId));
-        registrations.AddSingleton<DeadLetterService>();
-        registrations.AddSingleton<ServiceBusResourceService>();
+        registrations.AddSingleton<ArmClientFactory>(AzureFactories.CreateArmClientFactory);
+        registrations.AddSingleton<ServiceBusClientFactory>(AzureFactories.CreateServiceBusReceiverFactory);
+
+        registrations.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(ServiceBusOverviewRequest).Assembly);
+        });
         var registrar = new Infrastructure.TypeRegistrar(registrations);
 
         // Create a new command app with the registrar
         // and run it with the provided arguments.
         var app = new CommandApp(registrar);
-        app.Configure(config =>
+        app.Configure(appConfig =>
         {
-            config.SetApplicationName("az-ops-sb");
+            appConfig.SetApplicationName("az-ops-sb");
 
-            config.AddCommand<ServiceBusOverviewCommand>("show")
+            appConfig.AddCommand<ServiceBusOverviewCommand>("show")
                 .WithDescription(@"Lists Topics and Subscriptions for a Azure Service Bus Namespace with Dead Letters
 
 It's possible to omit `--subscription-id` and `--resource-group` by adding them to ~/.netconfig
@@ -52,14 +55,14 @@ It's possible to omit `--subscription-id` and `--resource-group` by adding them 
                     "show",
                     "--namespace", "sb-magic-bus-test"
                 });
-            config.AddBranch<DeadLetterSettings>("deadletter", add =>
+            appConfig.AddBranch<DeadLetterSettings>("deadletter", add =>
             {
                 add.AddCommand<DeadLetterListCommand>("list");
                 add.AddCommand<DeadLetterRequeueCommand>("requeue");
             });
 #if DEBUG
-            config.PropagateExceptions();
-            config.ValidateExamples();
+            appConfig.PropagateExceptions();
+            appConfig.ValidateExamples();
 #endif
         });
         return app.Run(args);
