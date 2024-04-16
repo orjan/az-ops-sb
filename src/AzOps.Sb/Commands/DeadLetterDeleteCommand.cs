@@ -1,18 +1,17 @@
 using AzOps.Sb.Requests;
 using AzOps.Sb.Requests.Filters;
-using Azure.Messaging.ServiceBus;
 using MediatR;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace AzOps.Sb.Commands;
 
-public class DeadLetterListCommand : AsyncCommand<DeadLetterSettings>
+public class DeadLetterDeleteCommand : AsyncCommand<DeadLetterSettings>
 {
     private readonly IAnsiConsole _ansiConsole;
     private readonly IMediator _mediator;
 
-    public DeadLetterListCommand(IAnsiConsole ansiConsole, IMediator mediator)
+    public DeadLetterDeleteCommand(IAnsiConsole ansiConsole, IMediator mediator)
     {
         _ansiConsole = ansiConsole;
         _mediator = mediator;
@@ -23,7 +22,7 @@ public class DeadLetterListCommand : AsyncCommand<DeadLetterSettings>
             .Create(settings.Limit)
             .Build();
 
-        var deadLetters = _mediator.CreateStream(new DeadLetterListRequest(settings.MapDeadLetterId(), messageFilter));
+        var deadLetters = _mediator.CreateStream(new DeadLetterDeleteRequest(settings.MapDeadLetterId(), messageFilter));
 
         await _ansiConsole.RenderMessages(deadLetters);
 
