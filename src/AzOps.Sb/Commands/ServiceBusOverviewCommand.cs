@@ -123,6 +123,12 @@ public class ServiceBusOverviewCommand : CancellableAsyncCommand<ServiceBusOverv
                 var subscriptionNode = topicNode.AddNode(subscription.Subscription);
                 subscriptionNode.AddNode(
                     $"Identifier: --namespace {settings.Namespace} --topic {topic.Topic} --subscription {subscription.Subscription}");
+
+                if (settings.ShowAll)
+                {
+                    subscriptionNode.AddNode($"[green]:check_mark: Active messages: {subscription.ActiveMessageCount}[/]");
+                }
+
                 if (subscription.DeadLetterMessageCount == 0)
                 {
                     subscriptionNode.AddNode("[green]:check_mark: Dead letters: 0[/]");

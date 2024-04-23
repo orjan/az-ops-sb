@@ -43,18 +43,26 @@ It's possible to omit `--subscription-id` and `--resource-group` by adding them 
 [[namespace ""sb-magic-bus-test""]]
   resource-group = ""rg-integration-test""
   subscription-id = ""00000000-1111-2222-3333-444444444444""")
-                .WithExample(new[]
-                {
+                .WithExample([
                     "show",
-                    "--namespace", "sb-magic-bus-test",
-                    "--subscription-id", "00000000-1111-2222-3333-444444444444",
-                    "--resource-group", "rg-integration-test"
-                })
-                .WithExample(new[]
-                {
+                    "--namespace",
+                    "sb-magic-bus-test",
+                    "--subscription-id",
+                    "00000000-1111-2222-3333-444444444444",
+                    "--resource-group",
+                    "rg-integration-test"
+                ])
+                .WithExample([
                     "show",
-                    "--namespace", "sb-magic-bus-test"
-                });
+                    "--namespace",
+                    "sb-magic-bus-test"
+                ])
+                .WithExample([
+                    "show",
+                    "--namespace",
+                    "sb-magic-bus-test",
+                    "--all"
+                ]);
             appConfig.AddBranch<DeadLetterSettings>("deadletter", add =>
             {
                 add.AddCommand<DeadLetterListCommand>("list");
