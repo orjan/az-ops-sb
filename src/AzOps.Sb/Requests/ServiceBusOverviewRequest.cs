@@ -30,8 +30,11 @@ public class
         {
             var subscriptions = resource.GetServiceBusSubscriptions();
             var subscriptionStatistics = subscriptions.Select(subscription =>
-                new SubscriptionStatistics(subscription.Data.Name,
-                    subscription.Data.CountDetails.DeadLetterMessageCount ?? 0)).ToList();
+                new SubscriptionStatistics(
+                    Subscription: subscription.Data.Name,
+                    DeadLetterMessageCount: subscription.Data.CountDetails.DeadLetterMessageCount ?? 0,
+                    ActiveMessageCount: subscription.Data.CountDetails.ActiveMessageCount ?? 0
+                )).ToList();
             return new TopicStatistics(resource.Data.Name, subscriptionStatistics);
         }).ToList();
 
@@ -41,6 +44,6 @@ public class
 
 public record TopicStatistics(string Topic, IReadOnlyCollection<SubscriptionStatistics> SubscriptionStatistics);
 
-public record SubscriptionStatistics(string Subscription, long DeadLetterMessageCount);
+public record SubscriptionStatistics(string Subscription, long DeadLetterMessageCount, long ActiveMessageCount);
 
 public record ServiceBusIdentifier(string SubscriptionId, string ResourceGroup, string Namespace);
