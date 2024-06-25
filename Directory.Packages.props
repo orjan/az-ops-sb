@@ -9,7 +9,7 @@
     <PackageVersion Include="Azure.ResourceManager" Version="1.11.1" />
     <PackageVersion Include="Azure.ResourceManager.ServiceBus" Version="1.0.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
-    <PackageVersion Include="DotNetConfig" Version="1.0.6" />
+    <PackageVersion Include="DotNetConfig" Version="1.1.1" />
     <PackageVersion Include="MediatR" Version="12.2.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
