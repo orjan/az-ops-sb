@@ -1,6 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "dependencyDashboardApproval": true,
-  "labels": ["dependencies"],
-  "extends": ["config:base", "group:allNonMajor"]
+  "labels": [
+    "dependencies"
+  ],
+  "extends": [
+    "config:recommended",
+    "group:allNonMajor"
+  ]
 }
