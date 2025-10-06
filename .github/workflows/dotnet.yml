@@ -23,7 +23,7 @@ jobs:
     - name: Print version
       run: echo "${{ steps.build-version.outputs.result }}"
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         global-json-file: global.json
     - name: Restore dependencies
@@ -53,7 +53,7 @@ jobs:
     - name: Print version
       run: echo "${{ steps.build-version.outputs.result }}"
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         global-json-file: global.json
     - name: Restore dependencies
