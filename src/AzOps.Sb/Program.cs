@@ -72,6 +72,38 @@ It's possible to omit `--subscription-id` and `--resource-group` by adding them 
                 add.AddCommand<DeadLetterRequeueCommand>("requeue");
                 add.AddCommand<DeadLetterDeleteCommand>("delete");
             });
+
+            appConfig.AddBranch<TransferSettings>("transfer", add =>
+            {
+                add.AddCommand<TransferCopyCommand>("copy")
+                    .WithDescription("Copy messages from a Subscription to a Topic")
+                    .WithExample([
+                        "transfer",
+                        "--namespace",
+                        "sb-magic-bus-test",
+                        "--topic",
+                        "topic-for-source-subscription",
+                        "--subscription",
+                        "source-subscription",
+                        "--destination-topic",
+                        "destination-topic",
+                        "copy"
+                    ]);
+                add.AddCommand<TransferMoveCommand>("move")
+                    .WithDescription("Move messages from a Subscription to a Topic")
+                    .WithExample([
+                        "transfer",
+                        "--namespace",
+                        "sb-magic-bus-test",
+                        "--topic",
+                        "topic-for-source-subscription",
+                        "--subscription",
+                        "source-subscription",
+                        "--destination-topic",
+                        "destination-topic",
+                        "move"
+                    ]);
+            });
 #if DEBUG
             appConfig.PropagateExceptions();
             appConfig.ValidateExamples();
