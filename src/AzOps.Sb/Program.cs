@@ -18,6 +18,7 @@ public class Program
         // Create a type registrar and register any dependencies.
         // A type registrar is an adapter for a DI framework.
         var registrations = new ServiceCollection();
+        registrations.AddLogging();
         registrations.AddSingleton(config);
         registrations.AddSingleton<TokenCredential>(new AzureCliCredential());
         registrations.AddSingleton<ArmClientFactory>(AzureFactories.CreateArmClientFactory);
@@ -25,6 +26,8 @@ public class Program
 
         registrations.AddMediatR(cfg =>
         {
+            cfg.LicenseKey =
+                "eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx1Y2t5UGVubnlTb2Z0d2FyZUxpY2Vuc2VLZXkvYmJiMTNhY2I1OTkwNGQ4OWI0Y2IxYzg1ZjA4OGNjZjkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2x1Y2t5cGVubnlzb2Z0d2FyZS5jb20iLCJhdWQiOiJMdWNreVBlbm55U29mdHdhcmUiLCJleHAiOiIxNzkxMzMxMjAwIiwiaWF0IjoiMTc1OTgwOTcwMSIsImFjY291bnRfaWQiOiIwMTk5YmNkM2RkZjc3NjFjYTVkZmNkOWUwY2ZhZmFkYyIsImN1c3RvbWVyX2lkIjoiY3RtXzAxazZ5ZGExM3NuOHZubTg4cHh0c2QzYmg4Iiwic3ViX2lkIjoiLSIsImVkaXRpb24iOiIwIiwidHlwZSI6IjIifQ.2Dpi6HSPMflcCE6qjLrrg4VMawgnxVZAxL6pYQhXufn_QnLPRA4bctFe6-pd6xuCiiTXpGHWNkNPCX9scNEOAM9oaAz3SGY0-sjV7jvFi3cIjy_AT0kX7bz2gn6qX8Av3P0x9-sa3nX7IQGDf_9mJy5WcpyR99x8lj6sx9v0VdHQCeXaSJYrTcq7pwobnX-G1iNK3WDZ9m4S4bOl1tW5JfWSlODsHMzHGNJHbcYLZGE19US1gIt-ym-pOErTgJ8sTZgZtrsWLajqNyYxQvoCZQjpAXlpYKhxkZ1X5VPbt982Zt5z4-w7xhsds25mw-IpXhLHUvXwDzLnAttgFwNrow";
             cfg.RegisterServicesFromAssembly(typeof(ServiceBusOverviewRequest).Assembly);
         });
         var registrar = new Infrastructure.TypeRegistrar(registrations);
