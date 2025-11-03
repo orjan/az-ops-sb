@@ -10,7 +10,7 @@
     <PackageVersion Include="Azure.ResourceManager.ServiceBus" Version="1.1.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="DotNetConfig" Version="1.2.0" />
-    <PackageVersion Include="MediatR" Version="13.0.0" />
+    <PackageVersion Include="MediatR" Version="13.1.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
